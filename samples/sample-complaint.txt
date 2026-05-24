@@ -1,0 +1,34 @@
+UNITED STATES DISTRICT COURT
+NORTHERN DISTRICT OF CALIFORNIA
+
+ACME CORPORATION, a Delaware corporation,
+                    Plaintiff,
+v.
+GLOBEX INDUSTRIES LLC,
+                    Defendant.
+
+Case No. 24-cv-01287
+
+COMPLAINT FOR BREACH OF CONTRACT
+
+Plaintiff Acme Corporation, by and through its undersigned counsel, alleges as follows:
+
+1. On January 15, 2023, Acme and Globex entered into a Master Services Agreement (the "MSA") for the supply of industrial components.
+
+2. On or about March 10, 2023, Acme delivered the first shipment of components pursuant to the MSA, valued at $1.2 million.
+
+3. From April 1, 2023 to April 30, 2023, Globex's quality assurance team inspected and accepted the delivered components without objection.
+
+4. On June 22, 2023, Globex's Chief Operating Officer, Sarah Chen, sent a written notice of intent to terminate the MSA, citing alleged quality concerns first raised in that same letter.
+
+5. In early September 2023, the parties met in San Francisco in an unsuccessful attempt to resolve the dispute.
+
+6. On November 7, 2023, Globex unilaterally ceased all payments owed to Acme under the MSA.
+
+7. Acme filed this Complaint on February 5, 2024, seeking damages in excess of $4.5 million.
+
+WHEREFORE, Plaintiff demands judgment against Defendant for compensatory damages, pre- and post-judgment interest, costs, and such other relief as the Court deems just.
+
+Respectfully submitted,
+Morrison & Hartley LLP
+Counsel for Plaintiff

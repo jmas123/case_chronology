@@ -1,0 +1,19 @@
+DEPOSITION OF SARAH CHEN
+Taken on October 14, 2024, at the offices of Morrison & Hartley LLP, San Francisco.
+
+Q. Ms. Chen, please state your full name and current position.
+A. Sarah Elizabeth Chen. I am the Chief Operating Officer of Globex Industries LLC.
+
+Q. When did you first become aware of any quality concerns with the components delivered by Acme Corporation?
+A. I would say in late May 2023. Our QA team flagged some variance in the tolerance specifications around May 28, 2023, in an internal email.
+
+Q. Did you communicate any of those concerns to Acme before sending the termination notice?
+A. There was a phone call on or about June 12, 2023, between myself and Acme's procurement lead, but it was informal. No written notice went out until the June 22 letter.
+
+Q. The complaint alleges that on November 7, 2023, Globex stopped all payments. Is that accurate?
+A. The payment stoppage was effective November 1, 2023, not the seventh. November 7 is the date our CFO confirmed the decision in writing.
+
+Q. After the failed September meeting in San Francisco, did the parties have any further direct contact?
+A. There was a brief exchange on December 18, 2023, when Acme's CEO called me. The call lasted about ten minutes and produced no resolution.
+
+(Deposition adjourned at 4:45 p.m., to be resumed on October 28, 2024.)

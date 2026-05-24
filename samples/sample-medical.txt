@@ -1,0 +1,24 @@
+PATIENT: Michael Reyes
+DOB: 1978-04-12
+MRN: 0049217
+
+CLINICAL NOTES, Bayview Orthopedic Group
+
+Visit 1 — August 3, 2023
+Patient presented with acute lower back pain following a workplace lifting incident on July 31, 2023. Examination revealed limited range of motion. Prescribed ibuprofen 600 mg and referred for MRI imaging.
+
+Visit 2 — August 21, 2023
+MRI performed on August 17, 2023 showed a herniated disc at L4-L5. Discussed conservative treatment options including physical therapy. Patient agreed to begin PT.
+
+Visit 3 — On or about September 25, 2023
+Patient reports moderate improvement after four physical therapy sessions. Pain reduced from 8/10 to 5/10. Continued PT regimen recommended.
+
+Visit 4 — November 14, 2023
+Patient reports recurrence of severe pain following a fall at home on November 9, 2023. Repeat MRI ordered for November 21, 2023.
+
+Visit 5 — December 4, 2023
+Reviewed November 21 MRI with patient. Disc herniation has worsened. Surgical consultation scheduled for January 9, 2024 with Dr. Patel.
+
+Signed,
+Anita Rao, MD
+Bayview Orthopedic Group
