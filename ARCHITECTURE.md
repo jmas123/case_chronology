@@ -125,8 +125,47 @@ The bias is toward grouping: it is cheaper to surface a false-positive conflict 
 | `REVIEW_CONFIDENCE_THRESHOLD` | `web/lib/grouping.ts` | Above this, no "Needs review" badge from confidence alone. |
 | `STOP_WORDS` | `web/lib/grouping.ts` | Domain-specific noise words. |
 
+## Phase 8: Extraction eval
+
+The eval lives in `api/app/evals/` (code) and `api/evals/` (data and reports). Numbers are written per prompt version so a regression is visible across runs.
+
+### What is being measured
+
+For each gold case, we count:
+
+- **TP (true positive):** a gold event that was matched by a predicted event (party-overlap ≥ 1 AND date agreement; see "Matching rules" below).
+- **FN (false negative):** a gold event with no matching predicted event. *The agent missed it.*
+- **FP (false positive):** a predicted event that was not claimed by any gold event. *The agent surfaced something extra.*
+
+From those:
+
+- **precision** = TP / (TP + FP). Of what the agent claimed, how much was correct.
+- **recall** = TP / (TP + FN). Of what should have been claimed, how much actually was.
+
+Recall is the regression-critical metric: missed events are how a chronology hurts a paralegal. Precision is a quality signal but a FP is recoverable (the paralegal sees the card and decides). A FN is invisible.
+
+### Matching rules
+
+A predicted event matches a gold event when both:
+
+1. **Party overlap ≥ 1.** Names are normalized (lowercase, legal suffixes stripped via the same list as `repo.find_or_create_party`); substring containment counts so "Acme" matches "Acme Corporation".
+2. **Date agreement.** Exact ISO equality, OR either side has `date_precision == "approximate"` and year-month prefixes match, OR either side has `date_precision == "range"` and the windows overlap.
+
+Title is intentionally NOT a gating criterion. The model legitimately rewrites titles ("MSA entered" vs "Master Services Agreement executed") and a token-Jaccard gate produces a wave of false negatives that confuse the regression signal. Title Jaccard is used only as a tie-breaker when two predicted events could fit one gold event.
+
+Matching is greedy: gold events are walked in declaration order. For each gold, every unclaimed predicted is scored by title Jaccard, and the best score wins. A more elaborate assignment (Hungarian, score-weighted) is overkill at this dataset size.
+
+### Regression test
+
+`api/tests/test_evals.py` loads the most recent report from `api/evals/reports/` and compares per-case recall against `api/evals/baseline.json`. A drop greater than `regression_threshold_pp` (default 10pp) on any case fails the test. The test skips when no report exists, so contributors without an API key are not blocked.
+
+### When to update the baseline
+
+After a deliberate prompt or model change that improves recall, re-run the eval and copy the per-case recall floors into `baseline.json`. Never copy precision floors automatically; precision changes are usually a judgment call (did the agent surface something useful that the gold should add, or something noisy that the prompt should suppress?). The baseline file has a `notes` field; use it.
+
 ## Open questions, tracked
 
 - Page numbering for .docx: paragraphs as a single page is a stopgap. Consider page-break detection later.
 - Large documents: hard limit on tokens per chunk, batched extraction. Revisit when a real complaint blows the budget.
 - Server-side grouping: currently client-side. If a second consumer (mobile, export) shows up, move to the API.
+- Gold set growth: the eval currently runs on three synthetic docs. Real signal comes from client-mix gold per representative document type.

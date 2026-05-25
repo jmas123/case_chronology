@@ -17,7 +17,7 @@ import {
   partyOptionsFromEvents,
   type Filters,
 } from "@/lib/filters";
-import { groupEvents, type EventGroup } from "@/lib/grouping";
+import { groupEvents, type ContradictionKind, type EventGroup } from "@/lib/grouping";
 import { formatEventDate, precisionStyle } from "@/lib/dates";
 
 type LoadState = "loading" | "ready" | "error";
@@ -26,6 +26,17 @@ function confidenceTone(confidence: number): { dot: string; text: string } {
   if (confidence >= 0.8) return { dot: "bg-emerald-500", text: "text-emerald-700" };
   if (confidence >= 0.5) return { dot: "bg-amber-500", text: "text-amber-700" };
   return { dot: "bg-red-500", text: "text-red-700" };
+}
+
+function contradictionLabel(kind: ContradictionKind): string {
+  switch (kind) {
+    case "date":
+      return "Date conflict";
+    case "role":
+      return "Role conflict";
+    case "description":
+      return "Account differs";
+  }
 }
 
 interface EventCardProps {
@@ -70,13 +81,17 @@ function EventCard({ group, onSelect, isSelected }: EventCardProps) {
         </span>
       </div>
 
-      {group.isConflict || group.isDuplicate || group.needsReview ? (
+      {group.contradictions.length > 0 || group.isDuplicate || group.needsReview ? (
         <div className="mt-2 flex flex-wrap gap-1">
-          {group.isConflict ? (
-            <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-red-800">
-              Conflict ({group.events.length})
+          {group.contradictions.map((c) => (
+            <span
+              key={c.kind}
+              title={c.summary}
+              className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-red-800"
+            >
+              {contradictionLabel(c.kind)}
             </span>
-          ) : null}
+          ))}
           {group.isDuplicate ? (
             <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-800">
               ×{group.events.length}
@@ -214,11 +229,25 @@ function TimelineContent() {
           </p>
         </div>
         {state === "ready" ? (
-          <p className="text-xs text-neutral-500">
-            {filtersActive
-              ? `${groups.length} ${groups.length === 1 ? "group" : "groups"} (${filteredEvents.length} of ${events.length} events)`
-              : `${groups.length} ${groups.length === 1 ? "group" : "groups"} (${events.length} ${events.length === 1 ? "event" : "events"})`}
-          </p>
+          <div className="flex flex-col items-end gap-1 text-xs">
+            <p className="text-neutral-500">
+              {filtersActive
+                ? `${groups.length} ${groups.length === 1 ? "group" : "groups"} (${filteredEvents.length} of ${events.length} events)`
+                : `${groups.length} ${groups.length === 1 ? "group" : "groups"} (${events.length} ${events.length === 1 ? "event" : "events"})`}
+            </p>
+            {(() => {
+              const conflictCount = groups.filter((g) => g.contradictions.length > 0).length;
+              if (conflictCount === 0) return null;
+              return (
+                <a
+                  href="/contradictions"
+                  className="text-red-700 hover:underline"
+                >
+                  {conflictCount} contradiction{conflictCount === 1 ? "" : "s"} to review →
+                </a>
+              );
+            })()}
+          </div>
         ) : null}
       </header>
 

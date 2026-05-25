@@ -1,0 +1,59 @@
+{
+  "case": "sample-complaint.txt",
+  "events": [
+    {
+      "title": "MSA entered between Acme and Globex",
+      "date": "2023-01-15",
+      "date_precision": "exact",
+      "parties": ["Acme", "Globex"]
+    },
+    {
+      "title": "First shipment of components delivered",
+      "date": "2023-03-10",
+      "date_precision": "on_or_about",
+      "parties": ["Acme", "Globex"]
+    },
+    {
+      "title": "QA inspection accepts shipment",
+      "date": "2023-04-01/2023-04-30",
+      "date_precision": "range",
+      "parties": ["Acme"]
+    },
+    {
+      "title": "Globex sends notice of intent to terminate MSA",
+      "date": "2023-06-22",
+      "date_precision": "exact",
+      "parties": ["Globex", "Sarah Chen"]
+    },
+    {
+      "title": "Reyes sustains workplace lifting injury",
+      "date": "2023-07-31",
+      "date_precision": "exact",
+      "parties": ["Michael Reyes", "Acme"]
+    },
+    {
+      "title": "Parties meet in San Francisco settlement attempt",
+      "date": "2023-09-01",
+      "date_precision": "approximate",
+      "parties": ["Acme", "Globex"]
+    },
+    {
+      "title": "Acme receives notice Reyes retained counsel",
+      "date": "2023-10-03",
+      "date_precision": "exact",
+      "parties": ["Acme", "Michael Reyes"]
+    },
+    {
+      "title": "Globex ceases all payments under MSA",
+      "date": "2023-11-07",
+      "date_precision": "exact",
+      "parties": ["Globex", "Acme"]
+    },
+    {
+      "title": "Complaint filed",
+      "date": "2024-02-05",
+      "date_precision": "exact",
+      "parties": ["Acme"]
+    }
+  ]
+}

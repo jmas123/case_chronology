@@ -4,16 +4,25 @@ Taken on October 14, 2024, at the offices of Morrison & Hartley LLP, San Francis
 Q. Ms. Chen, please state your full name and current position.
 A. Sarah Elizabeth Chen. I am the Chief Operating Officer of Globex Industries LLC.
 
-Q. When did you first become aware of any quality concerns with the components delivered by Acme Corporation?
-A. I would say in late May 2023. Our QA team flagged some variance in the tolerance specifications around May 28, 2023, in an internal email.
+Q. When did you first become aware of any quality concerns with the lifting components supplied to Acme Corporation under the MSA?
+A. Internally, around May 28, 2023. That is the date our QA team flagged tolerance variance in an internal email I was copied on.
 
-Q. Did you communicate any of those concerns to Acme before sending the termination notice?
-A. There was a phone call on or about June 12, 2023, between myself and Acme's procurement lead, but it was informal. No written notice went out until the June 22 letter.
+Q. Did Globex communicate any of those concerns to Acme before the termination notice?
+A. There was an informal phone call on or about June 12, 2023, between myself and Acme's procurement lead, Roberto Diaz. The call was perhaps fifteen minutes. Nothing in writing went out until the June 22 termination letter.
 
-Q. The complaint alleges that on November 7, 2023, Globex stopped all payments. Is that accurate?
-A. The payment stoppage was effective November 1, 2023, not the seventh. November 7 is the date our CFO confirmed the decision in writing.
+Q. Are you aware of the workplace injury sustained by an Acme employee, Michael Reyes, in July 2023?
+A. I became aware of it through litigation correspondence in early October 2023. I was not aware of it contemporaneously.
 
-Q. After the failed September meeting in San Francisco, did the parties have any further direct contact?
-A. There was a brief exchange on December 18, 2023, when Acme's CEO called me. The call lasted about ten minutes and produced no resolution.
+Q. Did Globex investigate whether one of its components was involved in that injury?
+A. We were not given the opportunity. Acme proposed a joint metallurgical inspection at the San Francisco meeting; counsel advised us at the time to decline because no claim had yet been formally tendered.
+
+Q. The complaint alleges that on November 7, 2023, Globex stopped all payments to Acme. Is that accurate?
+A. The payment stoppage was effective November 1, 2023. November 7 is the date our Chief Financial Officer confirmed the decision in a written memorandum to me. Counsel for Acme has conflated the two dates.
+
+Q. After the failed September meeting in San Francisco, did the parties have any further direct contact before the complaint was filed?
+A. There was one further exchange. Acme's Chief Executive Officer, David Park, telephoned me directly on December 18, 2023. The call lasted approximately ten minutes and produced no resolution. To my knowledge, that call is not referenced anywhere in Acme's pleadings.
+
+Q. Did you take any notes during that December 18 call?
+A. I made a contemporaneous memo to file. I produced it in response to Request for Production number 14.
 
 (Deposition adjourned at 4:45 p.m., to be resumed on October 28, 2024.)

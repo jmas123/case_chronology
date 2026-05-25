@@ -1,0 +1,53 @@
+{
+  "case": "sample-deposition.txt",
+  "events": [
+    {
+      "title": "Deposition of Sarah Chen taken",
+      "date": "2024-10-14",
+      "date_precision": "exact",
+      "parties": ["Sarah Chen", "Globex"]
+    },
+    {
+      "title": "Internal QA team flags tolerance variance",
+      "date": "2023-05-28",
+      "date_precision": "exact",
+      "parties": ["Globex"]
+    },
+    {
+      "title": "Informal phone call Chen and Acme procurement",
+      "date": "2023-06-12",
+      "date_precision": "on_or_about",
+      "parties": ["Sarah Chen", "Acme", "Roberto Diaz"]
+    },
+    {
+      "title": "Globex termination letter to Acme",
+      "date": "2023-06-22",
+      "date_precision": "exact",
+      "parties": ["Globex", "Acme"]
+    },
+    {
+      "title": "Globex payment stoppage to Acme effective",
+      "date": "2023-11-01",
+      "date_precision": "exact",
+      "parties": ["Globex", "Acme"]
+    },
+    {
+      "title": "Globex CFO confirms payment stoppage in writing",
+      "date": "2023-11-07",
+      "date_precision": "exact",
+      "parties": ["Globex", "Sarah Chen"]
+    },
+    {
+      "title": "Acme CEO David Park calls Chen directly",
+      "date": "2023-12-18",
+      "date_precision": "exact",
+      "parties": ["David Park", "Sarah Chen", "Acme"]
+    },
+    {
+      "title": "Deposition to resume",
+      "date": "2024-10-28",
+      "date_precision": "exact",
+      "parties": ["Sarah Chen"]
+    }
+  ]
+}

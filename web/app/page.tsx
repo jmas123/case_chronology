@@ -21,6 +21,12 @@ export default function HomePage() {
         >
           Timeline
         </Link>
+        <Link
+          href="/contradictions"
+          className="inline-flex items-center rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-800 hover:bg-neutral-50"
+        >
+          Contradictions
+        </Link>
       </div>
       <p className="mt-8 text-sm text-neutral-500">
         Phase 3: timeline. Source attribution drawer lands in Phase 4. See ROADMAP.md.

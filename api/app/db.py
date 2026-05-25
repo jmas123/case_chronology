@@ -106,8 +106,108 @@ def reset() -> None:
 
 
 def seed() -> None:
-    """Seed stub. Real seed data lands in Phase 7."""
-    print("Seed stub. Real seed data (synthetic complaint, deposition, medical record) lands in Phase 7.")
+    """Reset the DB, ingest every .txt in the repo's samples/ directory,
+    and run extraction end-to-end. Requires ANTHROPIC_API_KEY in the env.
+
+    The seed is destructive: it wipes the database first so the demo always
+    starts from a known clean state.
+    """
+    # Imports are local so `python -m app.db init` does not pay for the
+    # heavy agent imports when it is just creating tables.
+    import os
+    import sys
+    import uuid
+
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        print(
+            "ANTHROPIC_API_KEY is not set. The seed command runs the extraction "
+            "agent against three sample documents and needs a real key. Set it "
+            "in .env and re-run.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    from app.agent.extractor import extract_events
+    from app.extractors import extract
+    from app.repo import (
+        PersistedEventInput,
+        PersistedEventParty,
+        PersistedSource,
+        insert_document,
+        insert_event_with_sources,
+    )
+    from app.schemas import DocumentType
+
+    # samples/ lives at the repo root, one level above api/.
+    samples_dir = Path(__file__).resolve().parents[2] / "samples"
+    if not samples_dir.is_dir():
+        print(f"Samples directory not found: {samples_dir}", file=sys.stderr)
+        sys.exit(1)
+
+    sample_files = sorted(samples_dir.glob("sample-*.txt"))
+    if not sample_files:
+        print(f"No sample-*.txt files in {samples_dir}", file=sys.stderr)
+        sys.exit(1)
+
+    reset()
+
+    docs_seeded = 0
+    events_persisted = 0
+    events_rejected = 0
+    for path in sample_files:
+        print(f"  ingesting {path.name}...")
+        extracted = extract(path, "txt")
+        document = insert_document(
+            document_id=uuid.uuid4().hex,
+            filename=path.name,
+            type=DocumentType.TXT,
+            raw_text=extracted.raw_text,
+            page_count=extracted.page_count,
+        )
+        docs_seeded += 1
+
+        print(f"  extracting events from {path.name}...")
+        result = extract_events(
+            document_id=document.id,
+            filename=document.filename,
+            raw_text=document.raw_text,
+            doc_type=document.type.value,
+        )
+        for event in result.events:
+            try:
+                insert_event_with_sources(
+                    document_id=document.id,
+                    event=PersistedEventInput(
+                        date=event.date,
+                        date_precision=event.date_precision,
+                        title=event.title,
+                        description=event.description,
+                        event_type=event.event_type,
+                        confidence=event.confidence,
+                        confidence_rationale=event.confidence_rationale,
+                        sources=[
+                            PersistedSource(
+                                page=event.source_page,
+                                char_start=event.source_char_start,
+                                char_end=event.source_char_end,
+                                quote=event.source_quote,
+                            )
+                        ],
+                        parties=[
+                            PersistedEventParty(name=p.name, role_in_event=p.role_in_event)
+                            for p in event.parties
+                        ],
+                    ),
+                )
+                events_persisted += 1
+            except ValueError:
+                events_rejected += 1
+        events_rejected += result.rejected_bad_quote
+
+    print(
+        f"Seeded {docs_seeded} documents, extracted {events_persisted} events"
+        + (f", rejected {events_rejected}." if events_rejected else ".")
+    )
 
 
 def main() -> None:

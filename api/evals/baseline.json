@@ -1,0 +1,24 @@
+{
+  "captured_from": "2026-05-24.v2",
+  "captured_at": "2026-05-24",
+  "regression_threshold_pp": 10,
+  "notes": "Per-case recall is the regression signal. If a prompt change drops any case's recall by more than 10pp from these floors, the regression test fails.",
+  "overall": {
+    "precision": 0.93,
+    "recall": 1.0
+  },
+  "per_case": {
+    "sample-complaint.txt": {
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "sample-deposition.txt": {
+      "precision": 0.8,
+      "recall": 1.0
+    },
+    "sample-medical.txt": {
+      "precision": 1.0,
+      "recall": 1.0
+    }
+  }
+}

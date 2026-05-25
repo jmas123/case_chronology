@@ -124,23 +124,32 @@ def _verify_quote(chunk: str, args: dict[str, Any]) -> str | None:
 
 
 def _to_event(args: dict[str, Any]) -> ExtractedEvent:
+    """Coerce the model's tool_use args into a typed event.
+
+    The tool schema marks all fields required, but the model occasionally
+    omits the optional-feeling ones (`confidence_rationale`, `event_type`).
+    The verifiability essentials (date, source_quote, source offsets) are
+    accessed by key and will raise KeyError if missing, which is what we
+    want; everything else falls back to a sensible default.
+    """
     parties_raw = args.get("parties", []) or []
     parties = [
-        ExtractedParty(name=p["name"], role_in_event=p["role_in_event"]) for p in parties_raw
+        ExtractedParty(name=p["name"], role_in_event=p.get("role_in_event", ""))
+        for p in parties_raw
     ]
     return ExtractedEvent(
         date=args["date"],
         date_precision=args["date_precision"],
-        title=args["title"],
-        description=args["description"],
-        event_type=args["event_type"],
+        title=args.get("title") or "(untitled)",
+        description=args.get("description", ""),
+        event_type=args.get("event_type", "uncategorized"),
         parties=parties,
         source_quote=args["source_quote"],
         source_page=args["source_page"],
         source_char_start=args["source_char_start"],
         source_char_end=args["source_char_end"],
-        confidence=float(args["confidence"]),
-        confidence_rationale=args["confidence_rationale"],
+        confidence=float(args.get("confidence", 0.5)),
+        confidence_rationale=args.get("confidence_rationale", ""),
     )
 
 

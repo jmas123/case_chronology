@@ -1,0 +1,71 @@
+{
+  "case": "sample-medical.txt",
+  "events": [
+    {
+      "title": "Reyes lifting bracket workplace injury",
+      "date": "2023-07-31",
+      "date_precision": "exact",
+      "parties": ["Michael Reyes", "Acme", "Globex"]
+    },
+    {
+      "title": "Visit 1 initial presentation lower back pain",
+      "date": "2023-08-03",
+      "date_precision": "exact",
+      "parties": ["Michael Reyes", "Bayview Orthopedic"]
+    },
+    {
+      "title": "MRI performed",
+      "date": "2023-08-17",
+      "date_precision": "exact",
+      "parties": ["Michael Reyes", "Bayview Orthopedic"]
+    },
+    {
+      "title": "Visit 2 herniated disc diagnosis",
+      "date": "2023-08-21",
+      "date_precision": "exact",
+      "parties": ["Michael Reyes", "Bayview Orthopedic"]
+    },
+    {
+      "title": "Patient notifies retained counsel records request",
+      "date": "2023-09-20",
+      "date_precision": "exact",
+      "parties": ["Michael Reyes", "Vasquez Lin"]
+    },
+    {
+      "title": "Visit 3 moderate improvement after PT",
+      "date": "2023-09-25",
+      "date_precision": "on_or_about",
+      "parties": ["Michael Reyes", "Bayview Orthopedic"]
+    },
+    {
+      "title": "Patient fall at home recurrence",
+      "date": "2023-11-09",
+      "date_precision": "exact",
+      "parties": ["Michael Reyes"]
+    },
+    {
+      "title": "Visit 4 severe pain recurrence",
+      "date": "2023-11-14",
+      "date_precision": "exact",
+      "parties": ["Michael Reyes", "Bayview Orthopedic"]
+    },
+    {
+      "title": "Repeat MRI performed",
+      "date": "2023-11-21",
+      "date_precision": "exact",
+      "parties": ["Michael Reyes", "Bayview Orthopedic"]
+    },
+    {
+      "title": "Visit 5 review of repeat MRI",
+      "date": "2023-12-04",
+      "date_precision": "exact",
+      "parties": ["Michael Reyes", "Bayview Orthopedic"]
+    },
+    {
+      "title": "Surgical consultation scheduled",
+      "date": "2024-01-09",
+      "date_precision": "exact",
+      "parties": ["Michael Reyes", "Patel"]
+    }
+  ]
+}

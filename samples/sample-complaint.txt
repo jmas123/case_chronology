@@ -9,23 +9,27 @@ GLOBEX INDUSTRIES LLC,
 
 Case No. 24-cv-01287
 
-COMPLAINT FOR BREACH OF CONTRACT
+COMPLAINT FOR BREACH OF CONTRACT AND BAD FAITH TERMINATION
 
 Plaintiff Acme Corporation, by and through its undersigned counsel, alleges as follows:
 
-1. On January 15, 2023, Acme and Globex entered into a Master Services Agreement (the "MSA") for the supply of industrial components.
+1. On January 15, 2023, Acme and Globex entered into a Master Services Agreement (the "MSA") for the supply of industrial lifting components used in Acme's San Jose assembly plant.
 
-2. On or about March 10, 2023, Acme delivered the first shipment of components pursuant to the MSA, valued at $1.2 million.
+2. On or about March 10, 2023, Globex delivered the first shipment of components pursuant to the MSA, valued at $1.2 million. Acme paid in full within the contractually agreed thirty-day window.
 
-3. From April 1, 2023 to April 30, 2023, Globex's quality assurance team inspected and accepted the delivered components without objection.
+3. From April 1, 2023 to April 30, 2023, Acme's quality assurance team inspected the components against the MSA specifications and accepted the shipment without exception.
 
-4. On June 22, 2023, Globex's Chief Operating Officer, Sarah Chen, sent a written notice of intent to terminate the MSA, citing alleged quality concerns first raised in that same letter.
+4. On June 22, 2023, Globex's Chief Operating Officer, Sarah Chen, sent a written notice of intent to terminate the MSA, citing alleged quality concerns first raised in that very letter and supported by no prior correspondence.
 
-5. In early September 2023, the parties met in San Francisco in an unsuccessful attempt to resolve the dispute.
+5. On July 31, 2023, an Acme assembly worker, Michael Reyes, sustained a serious lower-back injury when a Globex-manufactured lifting bracket failed under load during a routine assembly operation. The failed bracket was preserved and is now in Acme's custody.
 
-6. On November 7, 2023, Globex unilaterally ceased all payments owed to Acme under the MSA.
+6. In early September 2023, representatives of the parties met in San Francisco in an unsuccessful attempt to resolve the dispute. Acme proposed an independent metallurgical inspection of the failed bracket. Globex declined.
 
-7. Acme filed this Complaint on February 5, 2024, seeking damages in excess of $4.5 million.
+7. On October 3, 2023, Acme first received written notice that Mr. Reyes had retained personal counsel and was preserving evidence related to the workplace injury. That notice forms the basis for Acme's preservation obligations in the present action.
+
+8. On November 7, 2023, Globex unilaterally ceased all payments owed to Acme under the MSA, including amounts that were not in dispute under any reading of the agreement.
+
+9. Acme filed this Complaint on February 5, 2024, seeking compensatory damages in excess of $4.5 million, as well as a declaration that Globex's June 22, 2023 termination notice was issued in bad faith.
 
 WHEREFORE, Plaintiff demands judgment against Defendant for compensatory damages, pre- and post-judgment interest, costs, and such other relief as the Court deems just.
 

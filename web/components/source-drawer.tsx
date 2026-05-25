@@ -127,11 +127,18 @@ export function SourceDrawer({ group, documentNames, onClose, triggerRef }: Sour
               {primary.title}
             </h2>
             <div className="mt-2 flex flex-wrap gap-1.5">
-              {group.isConflict ? (
-                <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800">
-                  Date conflict across {group.events.length} sources
+              {group.contradictions.map((c) => (
+                <span
+                  key={c.kind}
+                  className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-800"
+                >
+                  {c.kind === "date"
+                    ? "Date conflict"
+                    : c.kind === "role"
+                      ? "Role conflict"
+                      : "Account differs"}
                 </span>
-              ) : null}
+              ))}
               {group.isDuplicate ? (
                 <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800">
                   {group.events.length} matching mentions
@@ -143,6 +150,22 @@ export function SourceDrawer({ group, documentNames, onClose, triggerRef }: Sour
                 </span>
               ) : null}
             </div>
+            {group.contradictions.length > 0 ? (
+              <ul className="mt-3 space-y-1 text-xs text-neutral-700">
+                {group.contradictions.map((c) => (
+                  <li key={c.kind} className="leading-relaxed">
+                    <span className="font-medium text-red-700">
+                      {c.kind === "date"
+                        ? "Date: "
+                        : c.kind === "role"
+                          ? "Role: "
+                          : "Account: "}
+                    </span>
+                    {c.summary}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
           <button
             ref={closeButtonRef}

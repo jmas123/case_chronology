@@ -104,12 +104,69 @@ Goal: handle the cases that make this tool feel real instead of a demo.
 
 ---
 
-## Phase 7: Demo polish
+## Phase 7: Narrative case + demo polish
 
-Goal: a recorded demo that an interviewer can follow in under three minutes.
+Goal: a recorded demo that an interviewer can follow in under three minutes, anchored on a synthetic case where the timeline reveals something no single document does.
 
-- [ ] Three realistic synthetic seed documents: complaint, deposition excerpt, medical record
-- [ ] `python -m app.db seed` loads the seeds and runs extraction end-to-end
-- [ ] README screenshots: upload screen, timeline, source drawer
-- [ ] Recorded demo gif checked into `docs/`
-- [ ] README "Try it" section names the seed command and the URL to open
+- [x] Rewrite `samples/sample-*.txt` so the three documents tell ONE case where the timeline exposes signals invisible from any single doc:
+  - Date collision: deposition says Nov 1 (effective) vs complaint says Nov 7 (ceased) vs deposition's CFO memo on Nov 7. Three back-to-back cards.
+  - Chain-of-custody gap: medical record Sep 20 (Reyes retains counsel) vs complaint Oct 3 (Acme first notified). 13-day window.
+  - Missing event: deposition's Dec 18 CEO call appears as a single-source card; complaint omits it entirely.
+- [x] `python -m app.db seed` loads the three docs, runs extraction end-to-end, and prints `Seeded 3 documents, extracted N events.` Live run produced 30 events, 1 quote rejected by the verifier.
+- [ ] README screenshots: upload screen, timeline with conflict + duplicate badges visible, source drawer with multi-source groupyw
+- [ ] Recorded demo gif (≤ 90s) checked into `docs/` showing the "oh" moment: open timeline, point at the red Nov 7 conflict, open the drawer to see Nov 1 vs Nov 7 with both sources
+- [x] README "Try it" section names the seed command and the URL to open
+
+---
+
+## Phase 8: Extraction eval harness
+
+Goal: numbers we can defend. Most "AI for legal" pitches skip evals. Ours doesn't.
+
+- [x] `api/evals/cases/` holds one JSON per sample document listing every known event (date, parties, title). Source-span match left as a future tightening; current match gates are party + date.
+- [x] `python -m app.evals run` runs extraction against each case with the current `PROMPT_VERSION`, matches predicted events to gold by party-overlap ≥ 1 AND date agreement (with title Jaccard as a tie-breaker only, per ARCHITECTURE), and computes precision + recall per case and overall
+- [x] Output: stdout summary table AND `api/evals/reports/<prompt_version>.json` so prompt versions are comparable side by side
+- [x] README table updated with the current numbers (28/28 recall, 0.93 precision on prompt `2026-05-24.v2`)
+- [x] `pytest` test that loads the most recent report and fails if recall drops more than 10 percentage points from a baseline checked into `api/evals/baseline.json`
+- [x] Document the metric definitions in ARCHITECTURE.md so the numbers aren't ambiguous
+
+---
+
+## Phase 9: Contradiction detection v2
+
+Goal: extend Phase 6's date-conflict signal into substantive cross-document contradictions a paralegal can act on.
+
+- [x] Grouping logic flags `description` divergence: same group, but the descriptions diverge on salient tokens (capitalized proper nouns and 4+ digit numbers / money amounts). Summary lists the divergent tokens.
+- [x] Role contradiction: same party.id appears with different `role_in_event` across grouped events; per-party summary in the form `Globex: "payor" vs "non-paying party" vs "organization"`.
+- [x] `Contradiction` type with `kind: "date" | "description" | "role"` and a per-kind `summary` string, exported from `web/lib/grouping.ts`.
+- [x] `/contradictions` page (`web/app/contradictions/page.tsx`): lists every group with at least one contradiction, oldest first, with kind pills, per-kind summary lines, and source links.
+- [x] Card pill becomes specific: "Date conflict" / "Role conflict" / "Account differs", one per kind, with the summary as a hover title. The duplicate badge stays for no-contradiction multi-event groups.
+- [x] Grouping rules also tightened (trivial trailing-`s` stem, ≤ 60-day date cap) to keep the contradiction signal clean after lowering the title-Jaccard threshold to 0.2. Verified on the seeded case: surfaces Nov 1 vs Nov 7 payment-stoppage conflict and a model-error catch on the Jul 1 vs Jul 31 injury date.
+- [ ] Tests for each contradiction kind on synthetic event groups (detectors are exported and ready; adding a web test framework deferred to keep the dependency surface tight).
+
+---
+
+## Phase 10: Trust UI, reasoning visible on the card
+
+Goal: every claim shows not just confidence but *why* the model assigned that precision and that score. Trust is the thing legal customers actually buy.
+
+- [ ] Below the date pill on each card, a one-line "because…" snippet derived from `confidence_rationale` + the source quote. Examples:
+  - Exact: `because "on March 5, 2024"` (page 4)
+  - Approximate: `because "in early September 2023"` (page 2)
+  - Inferred: `confidence 0.4, "the following Monday"`
+- [ ] Confidence dot has a `title` attribute with the full `confidence_rationale` (hover reveals)
+- [ ] Drawer's confidence section is restructured: precision rationale + score rationale separately, with the anchoring snippet highlighted
+- [ ] Lint rule or test: card layout collapses gracefully when rationale is empty (model can omit; UI must not break)
+
+---
+
+## Phase 11 (stretch): Statute-of-limitations report
+
+Goal: one downstream artifact end-to-end. Picked SoL over depo prep because it has a clear right answer and a single screen.
+
+- [ ] `web/app/sol/page.tsx`: one screen with a window selector (1y / 2y / 3y / 4y / custom) and a default of 4 years
+- [ ] For each event group: compute `deadline = primary.date + window`, then `days_remaining = deadline - today`
+- [ ] Table sorted by `days_remaining` ascending: red (past), amber (≤ 90 days), neutral (later). Filter: hide rows where `days_remaining > 365` by default.
+- [ ] Per row: title, primary date, deadline, days remaining, source link, jump-to-drawer
+- [ ] Document the SoL window assumption in the page header (this is not legal advice, it's a planning aid)
+- [ ] CSV export of the visible rows (one button)
