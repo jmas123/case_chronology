@@ -105,27 +105,17 @@ def reset() -> None:
     init()
 
 
-def seed() -> None:
-    """Reset the DB, ingest every .txt in the repo's samples/ directory,
-    and run extraction end-to-end. Requires ANTHROPIC_API_KEY in the env.
-
-    The seed is destructive: it wipes the database first so the demo always
-    starts from a known clean state.
+def _ingest_samples() -> tuple[int, int, int]:
+    """Ingest every sample-*.txt and run extraction. Does NOT touch existing
+    rows. Returns (docs_seeded, events_persisted, events_rejected).
+    Requires ANTHROPIC_API_KEY in the env; raises RuntimeError if missing.
     """
-    # Imports are local so `python -m app.db init` does not pay for the
-    # heavy agent imports when it is just creating tables.
-    import os
-    import sys
     import uuid
 
     if not os.getenv("ANTHROPIC_API_KEY"):
-        print(
-            "ANTHROPIC_API_KEY is not set. The seed command runs the extraction "
-            "agent against three sample documents and needs a real key. Set it "
-            "in .env and re-run.",
-            file=sys.stderr,
+        raise RuntimeError(
+            "ANTHROPIC_API_KEY is not set; cannot run the extraction agent."
         )
-        sys.exit(1)
 
     from app.agent.extractor import extract_events
     from app.extractors import extract
@@ -138,18 +128,13 @@ def seed() -> None:
     )
     from app.schemas import DocumentType
 
-    # samples/ lives at the repo root, one level above api/.
     samples_dir = Path(__file__).resolve().parents[2] / "samples"
     if not samples_dir.is_dir():
-        print(f"Samples directory not found: {samples_dir}", file=sys.stderr)
-        sys.exit(1)
+        raise RuntimeError(f"Samples directory not found: {samples_dir}")
 
     sample_files = sorted(samples_dir.glob("sample-*.txt"))
     if not sample_files:
-        print(f"No sample-*.txt files in {samples_dir}", file=sys.stderr)
-        sys.exit(1)
-
-    reset()
+        raise RuntimeError(f"No sample-*.txt files in {samples_dir}")
 
     docs_seeded = 0
     events_persisted = 0
@@ -204,9 +189,51 @@ def seed() -> None:
                 events_rejected += 1
         events_rejected += result.rejected_bad_quote
 
+    return docs_seeded, events_persisted, events_rejected
+
+
+def seed() -> None:
+    """Reset the DB and ingest every sample-*.txt with full extraction.
+    Destructive: wipes the database first so the demo starts from a clean state.
+    """
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        print(
+            "ANTHROPIC_API_KEY is not set. The seed command runs the extraction "
+            "agent against three sample documents and needs a real key. Set it "
+            "in .env and re-run.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    reset()
+    docs, events, rejected = _ingest_samples()
     print(
-        f"Seeded {docs_seeded} documents, extracted {events_persisted} events"
-        + (f", rejected {events_rejected}." if events_rejected else ".")
+        f"Seeded {docs} documents, extracted {events} events"
+        + (f", rejected {rejected}." if rejected else ".")
+    )
+
+
+def auto_seed_if_empty() -> None:
+    """Run sample ingestion only when the DB has zero documents.
+    Safe to call repeatedly; no-ops once seeded. Used at server startup
+    so a fresh persistent volume gets populated automatically.
+    """
+    conn = connect()
+    try:
+        count = conn.execute("SELECT COUNT(*) FROM documents").fetchone()[0]
+    finally:
+        conn.close()
+    if count > 0:
+        return
+    print("DB is empty; auto-seeding sample documents...")
+    try:
+        docs, events, rejected = _ingest_samples()
+    except RuntimeError as e:
+        print(f"Auto-seed skipped: {e}", file=sys.stderr)
+        return
+    print(
+        f"Auto-seed complete: {docs} documents, {events} events"
+        + (f", {rejected} rejected." if rejected else ".")
     )
 
 
