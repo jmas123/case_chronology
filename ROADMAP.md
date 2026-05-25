@@ -150,13 +150,10 @@ Goal: extend Phase 6's date-conflict signal into substantive cross-document cont
 
 Goal: every claim shows not just confidence but *why* the model assigned that precision and that score. Trust is the thing legal customers actually buy.
 
-- [ ] Below the date pill on each card, a one-line "because…" snippet derived from `confidence_rationale` + the source quote. Examples:
-  - Exact: `because "on March 5, 2024"` (page 4)
-  - Approximate: `because "in early September 2023"` (page 2)
-  - Inferred: `confidence 0.4, "the following Monday"`
-- [ ] Confidence dot has a `title` attribute with the full `confidence_rationale` (hover reveals)
-- [ ] Drawer's confidence section is restructured: precision rationale + score rationale separately, with the anchoring snippet highlighted
-- [ ] Lint rule or test: card layout collapses gracefully when rationale is empty (model can omit; UI must not break)
+- [x] Below the date pill on each card, a one-line italicized "because…" snippet (`web/lib/anchors.ts` extracts the dateful fragment per `date_precision`, e.g. `because "on or about March 10, 2023" · p.1`). Falls back to a 70-char head when no pattern matches.
+- [x] Confidence dot carries `title={confidence_rationale}` so hover reveals the full model rationale without opening the drawer.
+- [x] Drawer's confidence section restructured into two boxes: **Why this date** (precision label + highlighted anchoring quote) and **Why confidence X.XX** (full rationale).
+- [x] Defensive empty handling: the "because…" line is suppressed when no source quote exists, and the rationale box prints a muted "Model did not provide a rationale" line when `confidence_rationale` is empty. Empty values do not break the card layout (verified via typecheck + lint clean).
 
 ---
 
@@ -164,9 +161,9 @@ Goal: every claim shows not just confidence but *why* the model assigned that pr
 
 Goal: one downstream artifact end-to-end. Picked SoL over depo prep because it has a clear right answer and a single screen.
 
-- [ ] `web/app/sol/page.tsx`: one screen with a window selector (1y / 2y / 3y / 4y / custom) and a default of 4 years
-- [ ] For each event group: compute `deadline = primary.date + window`, then `days_remaining = deadline - today`
-- [ ] Table sorted by `days_remaining` ascending: red (past), amber (≤ 90 days), neutral (later). Filter: hide rows where `days_remaining > 365` by default.
-- [ ] Per row: title, primary date, deadline, days remaining, source link, jump-to-drawer
-- [ ] Document the SoL window assumption in the page header (this is not legal advice, it's a planning aid)
-- [ ] CSV export of the visible rows (one button)
+- [x] `web/app/sol/page.tsx`: one screen with a window selector (1y / 2y / 3y / 4y / custom) and a default of 4 years
+- [x] For each event group: compute `deadline = primary.date + window`, then `days_remaining = deadline - today`. Ranges resolve to the END (worst-case latest accrual).
+- [x] Table sorted by `days_remaining` ascending: red (past), amber (≤ 90 days), neutral (later). Filter: hide rows where `days_remaining > 365` by default.
+- [x] Per row: title, primary date, deadline, days remaining, source link. Distinct empty states for "no events" vs "no deadlines within a year".
+- [x] Header disclaimer ("Not legal advice. The window must be set per claim type and jurisdiction").
+- [x] CSV export of the visible rows (one button, Blob download, filename includes the window in years).

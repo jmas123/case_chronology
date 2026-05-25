@@ -4,7 +4,15 @@ import { useEffect, useRef } from "react";
 
 import type { Event, Source } from "@shared/types";
 import type { EventGroup } from "@/lib/grouping";
+import { dateAnchor } from "@/lib/anchors";
 import { formatEventDate, precisionStyle } from "@/lib/dates";
+
+const PRECISION_LABEL: Record<string, string> = {
+  exact: "Exact calendar date",
+  on_or_about: "Hedged ('on or about')",
+  range: "Date range",
+  approximate: "Approximate (month or season only)",
+};
 
 interface SourceDrawerProps {
   group: EventGroup | null;
@@ -182,14 +190,10 @@ export function SourceDrawer({ group, documentNames, onClose, triggerRef }: Sour
 
         <div className="px-6 py-4 text-sm text-neutral-700">
           <p>{primary.description}</p>
+
           <dl className="mt-4 grid grid-cols-3 gap-y-2 text-xs">
             <dt className="text-neutral-500">Event type</dt>
             <dd className="col-span-2 text-neutral-800">{primary.event_type}</dd>
-            <dt className="text-neutral-500">Confidence</dt>
-            <dd className="col-span-2 text-neutral-800">
-              {primary.confidence.toFixed(2)}
-              <span className="ml-2 text-neutral-500">{primary.confidence_rationale}</span>
-            </dd>
             {primary.parties.length > 0 ? (
               <>
                 <dt className="text-neutral-500">Parties</dt>
@@ -206,6 +210,45 @@ export function SourceDrawer({ group, documentNames, onClose, triggerRef }: Sour
               </>
             ) : null}
           </dl>
+
+          {/* Why this date */}
+          {(() => {
+            const firstQuote = primary.sources[0]?.quote;
+            const anchor = firstQuote ? dateAnchor(firstQuote, primary.date_precision) : "";
+            return (
+              <section className="mt-4 rounded-md border border-neutral-200 bg-neutral-50 p-3">
+                <h4 className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
+                  Why this date
+                </h4>
+                <p className="mt-1 text-xs text-neutral-700">
+                  {PRECISION_LABEL[primary.date_precision] ?? primary.date_precision}
+                </p>
+                {anchor ? (
+                  <p className="mt-1 text-xs text-neutral-600">
+                    Anchored to{" "}
+                    <span className="rounded bg-yellow-100 px-1 italic">
+                      &ldquo;{anchor}&rdquo;
+                    </span>{" "}
+                    (page {primary.sources[0].page})
+                  </p>
+                ) : null}
+              </section>
+            );
+          })()}
+
+          {/* Why this confidence */}
+          <section className="mt-3 rounded-md border border-neutral-200 bg-neutral-50 p-3">
+            <h4 className="text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
+              Why confidence {primary.confidence.toFixed(2)}
+            </h4>
+            {primary.confidence_rationale ? (
+              <p className="mt-1 text-xs text-neutral-700">{primary.confidence_rationale}</p>
+            ) : (
+              <p className="mt-1 text-xs italic text-neutral-400">
+                Model did not provide a rationale.
+              </p>
+            )}
+          </section>
         </div>
 
         <section className="border-t border-neutral-200 px-6 py-4">

@@ -18,6 +18,7 @@ import {
   type Filters,
 } from "@/lib/filters";
 import { groupEvents, type ContradictionKind, type EventGroup } from "@/lib/grouping";
+import { dateAnchor } from "@/lib/anchors";
 import { formatEventDate, precisionStyle } from "@/lib/dates";
 
 type LoadState = "loading" | "ready" | "error";
@@ -75,11 +76,31 @@ function EventCard({ group, onSelect, isSelected }: EventCardProps) {
           {style.label ? <span className="mr-1 opacity-70">{style.label}</span> : null}
           {formatEventDate(primary.date, primary.date_precision)}
         </span>
-        <span className={`inline-flex items-center gap-1 text-xs ${tone.text}`}>
+        <span
+          className={`inline-flex items-center gap-1 text-xs ${tone.text}`}
+          title={primary.confidence_rationale || undefined}
+        >
           <span className={`h-1.5 w-1.5 rounded-full ${tone.dot}`} />
           {primary.confidence.toFixed(2)}
         </span>
       </div>
+
+      {(() => {
+        const firstQuote = primary.sources[0]?.quote;
+        if (!firstQuote) return null;
+        const anchor = dateAnchor(firstQuote, primary.date_precision);
+        if (!anchor) return null;
+        return (
+          <p className="mt-2 truncate text-[11px] italic text-neutral-500">
+            <span className="not-italic text-neutral-400">because </span>
+            &ldquo;{anchor}&rdquo;
+            <span className="not-italic text-neutral-400">
+              {" "}
+              · p.{primary.sources[0].page}
+            </span>
+          </p>
+        );
+      })()}
 
       {group.contradictions.length > 0 || group.isDuplicate || group.needsReview ? (
         <div className="mt-2 flex flex-wrap gap-1">
