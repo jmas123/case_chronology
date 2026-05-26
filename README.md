@@ -2,6 +2,10 @@
 
 A small tool for litigation paralegals. Drop in the documents that make up a case (complaints, depositions, medical records, letters), and get back a timeline of dated events where every claim is one click from the verbatim quote that supports it.
 
+**Live demo:** https://caseanalyzer100.vercel.app · **Repo:** https://github.com/jmas123/case_chronology
+
+![Timeline with date conflict surfaced](docs/hero-timeline.png)
+
 The point of the project is not "AI reads documents." The point is the rule below.
 
 ## The one product decision
@@ -20,6 +24,8 @@ That rule shows up in three layers so it cannot be quietly broken:
 
 Clicking any card opens a right-side drawer with the quote, the page, the filename, and a "View in context" link that deep-links to a document viewer with the quoted span wrapped in `<mark>`. That click path is the product.
 
+![Source drawer with verbatim quote, page, and document](docs/source-drawer.png)
+
 ## What's in the box
 
 | Surface | Path | What it does |
@@ -30,6 +36,12 @@ Clicking any card opens a right-side drawer with the quote, the page, the filena
 | Filtering | URL-encoded | Party, document, event type (multi-select), date range, minimum confidence. Default confidence floor is `0.3` so the timeline opens to signal, not noise. Every change rewrites the URL so a paralegal can paste a filtered view to an attorney. |
 | Conflict + duplicate handling | timeline cards | Events that share a party and have similar titles are grouped. Same date across the group → green "×N" duplicate badge (collapses the noise, shows combined sources). Different dates → red "Conflict (N)" badge with both dates side by side in the drawer. The bias is toward grouping, on the principle that a surfaced false-positive is cheaper than a hidden real conflict. |
 | Source drawer | click any card | Quote, page, filename, plus "View in context" linking to `/documents/{id}/view?page=&start=&end=` with the span highlighted on the original text. Esc closes; focus returns to the triggering card. |
+| Contradictions report | `/contradictions` | Every group with at least one contradiction, oldest first, with kind pills (date, role, account) and per-kind summaries. The page a paralegal opens before a deposition. |
+| Statute-of-limitations | `/sol` | Window selector (1y to 4y or custom), per-event `deadline = primary.date + window` and `days_remaining = deadline - today`. Red for past, amber for ≤ 90 days. CSV export of the visible rows. Header disclaimer that the window must be set per claim and jurisdiction. |
+
+![Contradictions page with kind pills](docs/contradictions.png)
+
+![Statute-of-limitations report with overdue rows highlighted](docs/sol-report.png)
 
 ## How the agent is built (and where I did not trust it)
 
@@ -122,7 +134,9 @@ npm run dev
 
 ## Try it
 
-The fastest way to see the product land is the seed command. It wipes the database, ingests the three documents in `samples/`, runs extraction end-to-end, and prints a summary:
+The fastest path is the live demo above. The deployed app boots populated with the three seeded documents, so the timeline is already showing the conflict and the gap when you land.
+
+To run locally, the seed command wipes the database, ingests the three documents in `samples/`, runs extraction end-to-end, and prints a summary:
 
 ```bash
 cd api
@@ -167,4 +181,4 @@ If you only have ten minutes, read in this order:
 
 ## Built phase by phase
 
-The work is checked off in [`ROADMAP.md`](ROADMAP.md). Phases 0 through 6 are complete (scaffolding, ingestion, extraction agent, timeline, source drawer, filtering, edge cases). Phase 7 (a `db seed` command, recorded demo, screenshots) is the polish pass and is the obvious next chunk.
+The work is checked off in [`ROADMAP.md`](ROADMAP.md). Phases 0 through 11 are landed: scaffolding, ingestion, the extraction agent, timeline, source drawer, filtering, edge cases, the seeded narrative case, the eval harness, the contradictions report, the trust UI (`because…` snippets + rationale hover), and the statute-of-limitations report. The deferred items are listed under "What I would not ship without."
