@@ -105,6 +105,29 @@ def reset() -> None:
     init()
 
 
+def _resolve_samples_dir() -> Path:
+    """Find samples/ across common deploy layouts.
+
+    Priority: SAMPLES_DIR env var, then repo-root layout (parents[2]/samples
+    when the whole repo is the deploy unit), then api-as-root layout
+    (parents[1]/samples or ./samples when only api/ is deployed). Returns
+    the first that exists, or the most likely candidate so the caller can
+    raise with a sensible path in the error message.
+    """
+    if explicit := os.getenv("SAMPLES_DIR"):
+        return Path(explicit)
+    here = Path(__file__).resolve()
+    candidates = [
+        here.parents[2] / "samples",  # repo root deploy: /app/api/app/db.py
+        here.parents[1] / "samples",  # api root deploy:  /app/app/db.py
+        Path.cwd() / "samples",
+    ]
+    for c in candidates:
+        if c.is_dir():
+            return c
+    return candidates[0]
+
+
 def _ingest_samples() -> tuple[int, int, int]:
     """Ingest every sample-*.txt and run extraction. Does NOT touch existing
     rows. Returns (docs_seeded, events_persisted, events_rejected).
@@ -128,9 +151,12 @@ def _ingest_samples() -> tuple[int, int, int]:
     )
     from app.schemas import DocumentType
 
-    samples_dir = Path(__file__).resolve().parents[2] / "samples"
+    samples_dir = _resolve_samples_dir()
     if not samples_dir.is_dir():
-        raise RuntimeError(f"Samples directory not found: {samples_dir}")
+        raise RuntimeError(
+            f"Samples directory not found. Tried SAMPLES_DIR env var and "
+            f"{samples_dir}. Set SAMPLES_DIR or include samples/ in the deploy."
+        )
 
     sample_files = sorted(samples_dir.glob("sample-*.txt"))
     if not sample_files:

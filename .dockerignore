@@ -1,0 +1,17 @@
+# Keep the build context small. We only COPY api/ and samples/, but the
+# .venv/__pycache__ under api/ would otherwise add tens of MB.
+**/.venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.ruff_cache
+**/*.egg-info
+**/case_chronology.db
+**/uploads
+**/.DS_Store
+.git
+.gitignore
+node_modules
+.next
+web
+docs
